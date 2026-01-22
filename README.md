@@ -1,81 +1,75 @@
-# ShabaFAI - Gestion de Fournisseur d'Accès Internet
+# ShabaFAI - Système de Gestion de FAI
 
-ShabaFAI est une application web moderne conçue pour simplifier la gestion des abonnements internet. Elle permet aux utilisateurs de souscrire à des forfaits, de suivre leur consommation et de générer des reçus de paiement de manière autonome. Côté administration, elle offre des outils robustes pour valider les demandes et gérer le parc d'abonnés.
+ShabaFAI est une application web moderne et robuste conçue pour simplifier la gestion des Fournisseurs d'Accès Internet (FAI). Elle offre une expérience fluide pour les utilisateurs souhaitant s'abonner et des outils de contrôle puissants pour les administrateurs.
 
 ## 🚀 Fonctionnalités Clés
 
-### Pour les Utilisateurs
-- **Tableau de bord intuitif** : Vue d'ensemble de l'abonnement actif et historique des transactions.
-- **Gestion des abonnements** : Souscription simplifiée avec saisie des informations techniques (adresse MAC, type de réseau).
-- **Génération de reçus PDF** : Création et téléchargement automatique de reçus professionnels après validation de l'abonnement (généré côté client pour plus de confidentialité).
-- **Notifications en temps réel** : Suivi de l'état des demandes (en attente, approuvé, rejeté).
+### 👤 Pour les Utilisateurs
+- **Souscription Intuitive** : Formulaire simplifié pour choisir son forfait (2.4GHz ou 5GHz) et renseigner ses informations techniques (Adresse MAC).
+- **Tableau de Bord Personnel** : Suivi en temps réel de l'état de l'abonnement (En attente, Actif, Expiré).
+- **Reçus PDF Professionnels** : Génération automatique de reçus après validation, incluant le nom du réseau (SSID), les détails du forfait et un design soigné.
+- **Profil Utilisateur** : Gestion des informations personnelles et historique des transactions.
 
-### Pour les Administrateurs
-- **Validation des demandes** : Interface dédiée pour approuver ou rejeter les nouvelles souscriptions.
-- **Gestion centralisée** : Accès rapide aux détails techniques des abonnés.
-- **Sécurité multi-niveaux** : Accès restreint aux rôles Admin et SuperAdmin via Firebase Auth et Firestore Rules.
+### 🛡️ Pour les Administrateurs
+- **Gestion des Demandes** : Interface dédiée pour valider ou rejeter les nouvelles souscriptions avec un système de notifications.
+- **Suivi des Abonnés** : Vue d'ensemble de tous les abonnements actifs avec recherche et filtrage.
+- **Tableaux de Bord Statistiques** : Visualisation des revenus et de la croissance du parc d'abonnés via des graphiques interactifs (Chart.js).
 
-## 🛠️ Stack Technique
+### 👑 Pour le Super Admin
+- **Contrôle des Utilisateurs** : Possibilité de promouvoir des utilisateurs au rang d'Admin, de suspendre (pause) ou de supprimer des comptes.
+- **Gestion Avancée** : Nettoyage de la base de données (suppression d'abonnements) et configuration globale.
+- **Sécurité Critique** : Les comptes suspendus sont immédiatement déconnectés en temps réel grâce à l'intégration `onSnapshot`.
 
-- **Frontend** : React 19, Vite, Tailwind CSS, Lucide React, Framer Motion.
-- **Backend/Base de données** : Firebase Firestore (NoSQL).
-- **Authentification** : Firebase Authentication.
-- **Hébergement** : Firebase Hosting.
-- **Génération PDF** : jsPDF.
+## 🛠️ Architecture Technique
 
-## 📦 Installation et Configuration
+### Frontend
+- **Framework** : React 19 avec Vite pour une rapidité de développement optimale.
+- **Style** : Tailwind CSS pour un design "Glassmorphism" moderne et responsive.
+- **Icônes** : Lucide React.
+- **Animations** : Framer Motion.
+- **Graphiques** : React-Chartjs-2.
+- **PDF** : jsPDF pour la génération de documents côté client.
 
-### Prérequis
-- Node.js (v18+)
-- Compte Firebase
+### Backend & Sécurité
+- **Base de Données** : Firebase Firestore (NoSQL) pour une synchronisation en temps réel.
+- **Authentification** : Firebase Auth avec gestion fine des rôles (User, Admin, SuperAdmin).
+- **Sécurité** : Règles Firestore strictes pour protéger les données sensibles.
+- **Temps Réel** : Utilisation intensive de `onSnapshot` pour refléter les changements de statut instantanément sans recharger la page.
 
-### Étapes d'installation
+## 📋 Logique de l'Application
 
-1. **Cloner le projet**
-   ```bash
-   git clone <URL_DU_DEPOT>
-   cd shab_fai
-   ```
+1. **Authentification** : Chaque utilisateur est lié à un document dans la collection `users` qui définit son rôle et son statut.
+2. **Flux d'Abonnement** :
+   - L'utilisateur soumet une demande.
+   - La demande apparaît dans l'onglet "Demandes" de l'Admin.
+   - L'Admin valide la transaction (vérification du paiement).
+   - L'abonnement devient actif et le reçu PDF est débloqué pour l'utilisateur.
+3. **Gestion des Rôles** :
+   - `user` : Accès au dashboard personnel.
+   - `admin` : Accès à la gestion des abonnements et statistiques.
+   - `superadmin` : Accès total, y compris la gestion des autres administrateurs.
 
-2. **Installer les dépendances**
-   ```bash
-   # Pour le client
-   cd client
-   npm install
-   
-   # Pour les fonctions (optionnel)
-   cd ../functions
-   npm install
-   ```
+## 📦 Installation
 
-3. **Configuration Firebase**
-   - Créez un projet sur la [console Firebase](https://console.firebase.google.com/).
-   - Activez Firestore et l'Authentification (Email/Password).
-   - Copiez vos clés de configuration dans `client/src/config/firebase.js`.
+```bash
+# Installation des dépendances client
+cd client
+npm install
 
-4. **Lancer en local**
-   ```bash
-   cd client
-   npm run dev
-   ```
+# Configuration
+# Editez client/src/config/firebase.js avec vos clés Firebase
+
+# Lancement
+npm run dev
+```
 
 ## 🚀 Déploiement
 
-Le projet est configuré pour un déploiement rapide sur Firebase :
-
+Le projet est prêt pour un déploiement Firebase :
 ```bash
-# Construire l'application
-cd client
 npm run build
-
-# Déployer sur Firebase
-cd ..
-firebase deploy --only "hosting,firestore"
+firebase deploy
 ```
 
-## 📄 Licence
-
-Ce projet est la propriété de l'équipe ShabaFAI. Tous droits réservés.
-
 ---
-Développé avec ❤️ par l'équipe ShabaFAI.
+Développé avec ❤️ pour une gestion FAI simplifiée et efficace.

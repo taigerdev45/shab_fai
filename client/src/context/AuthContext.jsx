@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { AuthContext } from "./auth";
 
 export const AuthProvider = ({ children }) => {
@@ -10,28 +10,54 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    let unsubscribeDoc = () => {};
+
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      
       if (user) {
-        try {
-          const docRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(docRef);
+        // Listen to user data changes in real-time
+        unsubscribeDoc = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
           if (docSnap.exists()) {
-            setUserData(docSnap.data());
+            const data = docSnap.data();
+            setUserData(data);
+            
+            // If account is paused while logged in
+            if (data.status === "paused") {
+              signOut(auth);
+              alert("Votre compte a été suspendu par l'administrateur.");
+            }
+          } else {
+            setUserData(null);
           }
-        } catch (err) {
-          console.error("Erreur lors de la récupération des données utilisateur:", err);
-        }
+          setLoading(false);
+        }, (err) => {
+          console.error("Erreur lors de l'écoute des données utilisateur:", err);
+          setLoading(false);
+        });
       } else {
         setUserData(null);
+        unsubscribeDoc();
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribeAuth();
+      unsubscribeDoc();
+    };
   }, []);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const login = async (email, password) => {
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    const docRef = doc(db, "users", res.user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data().status === "paused") {
+      await signOut(auth);
+      throw new Error("Votre compte est suspendu. Veuillez contacter l'administrateur.");
+    }
+    return res;
+  };
   
   const register = async (email, password, fullName, phone, securityQuestion, securityAnswer) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);

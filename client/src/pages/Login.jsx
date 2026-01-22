@@ -15,10 +15,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       await login(email, password);
-    } catch {
-      setError("Échec de la connexion. Vérifiez vos identifiants.");
+    } catch (err) {
+      setError(err.message || "Échec de la connexion. Vérifiez vos identifiants.");
     }
   };
 
