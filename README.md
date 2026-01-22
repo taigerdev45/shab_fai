@@ -82,7 +82,4 @@ npm run build
 npm run server:start
 ```
 
-### Configuration Firebase
-Renseignez vos clés dans `client/src/config/firebase.js`.
-
 ShabaFAI pour une gestion FAI simplifiée et ultra-performante.
