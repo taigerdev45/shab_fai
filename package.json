@@ -1,0 +1,33 @@
+{
+  "name": "shaba-fai",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "description": "Projet ShabaFAI - Système de Gestion de FAI",
+  "workspaces": [
+    "client",
+    "functions",
+    "server"
+  ],
+  "scripts": {
+    "client:dev": "npm run dev -w client",
+    "client:build": "npm run build -w client",
+    "client:preview": "npm run preview -w client",
+    "functions:serve": "npm run serve -w functions",
+    "functions:shell": "npm run shell -w functions",
+    "functions:deploy": "npm run deploy -w functions",
+    "server:start": "node server/index.js",
+    "build": "npm run build -w client",
+    "install:all": "npm install"
+  },
+  "keywords": [
+    "fai",
+    "management",
+    "firebase",
+    "react"
+  ],
+  "author": "ShabaFAI Team",
+  "license": "ISC"
+}

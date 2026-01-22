@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth";
 import { 
   initializeFirestore, 
   persistentLocalCache,
-  persistentIndexedDbWebLayer,
   getFirestore
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -26,9 +25,7 @@ const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 let db;
 try {
   db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
-      tabManager: persistentIndexedDbWebLayer()
-    }),
+    localCache: persistentLocalCache(),
     experimentalForceLongPolling: true
   });
 } catch {

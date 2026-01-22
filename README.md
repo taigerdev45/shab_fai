@@ -66,17 +66,24 @@ Le projet intègre `vite-plugin-pwa`, permettant une installation de l'applicati
 
 ## 📦 Installation & Développement
 
+L'application utilise les **npm workspaces** pour gérer le client, le serveur et les fonctions depuis la racine.
+
 ```bash
-# Installation des dépendances
-cd client
+# Installation de toutes les dépendances (root, client, server, functions)
 npm install
 
-# Configuration Firebase
-# Renseignez vos clés dans client/src/config/firebase.js
+# Lancement du client en mode développement
+npm run client:dev
 
-# Lancement du serveur de développement
-npm run dev
+# Construction du client pour la production
+npm run build
+
+# Lancement du serveur (si utilisé)
+npm run server:start
 ```
+
+### Configuration Firebase
+Renseignez vos clés dans `client/src/config/firebase.js`.
 
 ---
 Développé avec ❤️ par l'équipe ShabaFAI pour une gestion FAI simplifiée et ultra-performante.
