@@ -107,6 +107,11 @@ const Register = () => {
             Se connecter
           </Link>
         </p>
+        <div className="mt-8 pt-6 border-t border-white/10 text-center">
+          <p className="text-xs text-gray-500 italic">
+            Développé par <span className="text-blue-400/80 font-medium">Taiger Dev</span> pour une gestion optimale
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -68,7 +68,11 @@ const Login = () => {
             <div className="flex justify-center mb-6">
               <img src="/Logo_shabfai.png" alt="ShabaFAI Logo" className="h-24 w-auto object-contain" />
             </div>
-            <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">ShabaFAI</h2>
+            <h2 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">ShabaFAI</h2>
+            <p className="text-center text-gray-300 text-sm mb-8 leading-relaxed">
+              Gérez vos abonnements Internet en toute simplicité. ShabaFAI vous permet de souscrire, 
+              suivre et gérer vos forfaits Wi-Fi avec une interface moderne et sécurisée.
+            </p>
             {error && <p className="text-red-500 text-center mb-4">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -167,6 +171,11 @@ const Login = () => {
             S'inscrire
           </Link>
         </p>
+        <div className="mt-8 pt-6 border-t border-white/10 text-center">
+          <p className="text-xs text-gray-500 italic">
+            Développé par <span className="text-blue-400/80 font-medium">Taiger Dev</span> pour une gestion optimale
+          </p>
+        </div>
       </div>
     </div>
   );
