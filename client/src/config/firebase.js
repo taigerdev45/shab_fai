@@ -2,7 +2,8 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { 
   initializeFirestore, 
-  memoryLocalCache,
+  persistentLocalCache,
+  persistentIndexedDbWebLayer,
   getFirestore
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -19,18 +20,18 @@ const firebaseConfig = {
 // Singleton pour l'application Firebase
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-// CONFIGURATION ULTRA-STABLE POUR DÉVELOPPEMENT (Vite) :
-// On désactive la persistance sur disque pour éviter les conflits multi-onglets/HMR
-// et on force le Long Polling pour la stabilité des connexions.
+// CONFIGURATION AVANCÉE AVEC MISE EN CACHE PERSISTANTE :
+// On active la persistance sur disque (IndexedDB) pour permettre le mode hors-ligne
+// et accélérer le chargement initial en utilisant les données locales.
 let db;
 try {
-  // Tentative d'initialisation avec les paramètres optimisés
   db = initializeFirestore(app, {
-    localCache: memoryLocalCache(),
+    localCache: persistentLocalCache({
+      tabManager: persistentIndexedDbWebLayer()
+    }),
     experimentalForceLongPolling: true
   });
 } catch {
-  // Si déjà initialisé (HMR), on récupère l'instance existante
   db = getFirestore(app);
 }
 
